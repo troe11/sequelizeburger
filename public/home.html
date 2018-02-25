@@ -44,7 +44,9 @@ $(function() {
             for (let i = 0; i < data.length; i++) {
                 if (!data[i].devoured) {
                     var name = data[i].burger_name;
-                    var btn = $('<button>').text("Eat").attr('id', data[i].id);
+                    var btn = $('<button>').text("Eat")
+                        .attr('data', data[i].id)
+                        .attr('id', 'toEat');
                     var liObj = $('<li>')
                         .append(name)
                         .append(btn);
@@ -62,6 +64,21 @@ $(function() {
 
     getBurgers()
 
+    $('body').on('click', '#toEat', function(e) {
+        e.preventDefault();
+        
+        var thisId = $(this).attr('data');
+        console.log(thisId)
+
+        $.ajax("/api/burgers/" + thisId, {
+            type: "PUT",
+            data: thisId
+        })
+
+        location.reload();
+    })
+
+
     $('#submit').on('click', function(data) {
         var name = $('#newBurger').val().trim();
         var newBurg = {
@@ -76,16 +93,7 @@ $(function() {
         location.reload();
     })
 
-    $('.devour').on('click', function() {
-        var thisId = $(this).attr('id');
 
-        $.ajax("/api/burgers/" + thisId, {
-            type: "PUT",
-            data: thisId
-        })
-
-        location.reload();
-    })
 })
 </script>
 
