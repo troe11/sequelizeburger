@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Burgers!</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/css/burger_style.css">
+    <script src="https://code.jquery.com/jquery.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="eaten-line">
+            <h1>Eat Da Burger!</h1>
+            <div class="not-eaten">
+                <img src="../../assets/img/noteaten.jpeg">
+                <h2>Free to eat!</h2>
+                <ol id="undevouredList">
+                </ol>
+            </div>
+            <div class="eaten">
+                <img src="../../assets/img/eaten.jpeg">
+                <h2>Already Devoured!</h2>
+                <ol id="devouredList">
+                </ol>
+                <div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <textarea rows="2" columns="4" id="newBurger"></textarea>
+        <button id="submit">Submit</button>
+        <br>
+        <br>
+        <p>Enter a burger an click Submit!</p>
+    </div>
+</body>
+<script type="text/javascript">
+$(function() {
+
+    function getBurgers() {
+        $.get("/api/burgers", function(data) {
+            for (let i = 0; i < data.length; i++) {
+                if (!data[i].devoured) {
+                    var name = data[i].burger_name;
+                    var btn = $('<button>').text("Eat").attr('id', data[i].id);
+                    var liObj = $('<li>')
+                        .append(name)
+                        .append(btn);
+                    $('#undevouredList').append(liObj);
+                } else {
+                    var name = data[i].burger_name;
+                    var liObj = $('<li>')
+                        .append(name);
+                    $('#devouredList').append(liObj);
+                }
+
+            };
+        });
+    };
+
+    getBurgers()
+
+    $('#submit').on('click', function(data) {
+        var name = $('#newBurger').val().trim();
+        var newBurg = {
+            burger_name: name,
+            devoured: 0
+        }
+
+        $.ajax("/api/burgers", {
+            type: 'POST',
+            data: newBurg
+        })
+        location.reload();
+    })
+
+    $('.devour').on('click', function() {
+        var thisId = $(this).attr('id');
+
+        $.ajax("/api/burgers/" + thisId, {
+            type: "PUT",
+            data: thisId
+        })
+
+        location.reload();
+    })
+})
+</script>
+
+</html>
