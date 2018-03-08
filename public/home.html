@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Burgers!</title>
-    <link rel="stylesheet" type="text/css" href="../../assets/css/burger_style.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/burger_style.css">
     <script src="https://code.jquery.com/jquery.js"></script>
 </head>
 
@@ -13,13 +13,13 @@
         <div class="eaten-line">
             <h1>Eat Da Burger!</h1>
             <div class="not-eaten">
-                <img src="../../assets/img/noteaten.jpeg">
+                <img src="assets/img/noteaten.jpeg">
                 <h2>Free to eat!</h2>
                 <ol id="undevouredList">
                 </ol>
             </div>
             <div class="eaten">
-                <img src="../../assets/img/eaten.jpeg">
+                <img src="assets/img/eaten.jpeg">
                 <h2>Already Devoured!</h2>
                 <ol id="devouredList">
                 </ol>
@@ -41,6 +41,7 @@ $(function() {
 
     function getBurgers() {
         $.get("/api/burgers", function(data) {
+            console.log(data)
             for (let i = 0; i < data.length; i++) {
                 if (!data[i].devoured) {
                     var name = data[i].burger_name;
